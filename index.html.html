@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReportCasa — Conosci davvero la casa che stai comprando?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sand: #F5F0E8;
+    --sand-dark: #EAE3D4;
+    --ink: #1C1A16;
+    --ink-muted: #5A5650;
+    --ink-faint: #9A9690;
+    --terracotta: #C4613A;
+    --terracotta-light: #F2E8E2;
+    --terracotta-dark: #9E4A28;
+    --sage: #4A6741;
+    --sage-light: #E6EEE5;
+    --cream: #FDFAF5;
+    --white: #FFFFFF;
+    --border: rgba(28, 26, 22, 0.12);
+    --border-strong: rgba(28, 26, 22, 0.25);
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(253, 250, 245, 0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
+
+  .logo span { color: var(--terracotta); }
+
+  nav a.nav-cta {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--terracotta);
+    text-decoration: none;
+    padding: 8px 20px;
+    border: 1.5px solid var(--terracotta);
+    border-radius: 100px;
+    transition: all 0.2s;
+  }
+
+  nav a.nav-cta:hover {
+    background: var(--terracotta);
+    color: var(--white);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(196,97,58,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(74,103,65,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--terracotta);
+    background: var(--terracotta-light);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    letter-spacing: 0.3px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--terracotta);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .hero h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(38px, 5.5vw, 68px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+    max-width: 820px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .hero-sub {
+    font-size: clamp(17px, 2vw, 20px);
+    color: var(--ink-muted);
+    max-width: 540px;
+    line-height: 1.65;
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  /* ── WAITLIST FORM ── */
+  .waitlist-box {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 8px 40px rgba(28,26,22,0.07);
+    position: relative;
+    z-index: 1;
+  }
+
+  .waitlist-box h2 {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .waitlist-box p {
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .form-row input {
+    flex: 1;
+    padding: 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--sand);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    min-width: 0;
+  }
+
+  .form-row input::placeholder { color: var(--ink-faint); }
+
+  .form-row input:focus {
+    border-color: var(--terracotta);
+    background: var(--white);
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--white);
+    background: var(--terracotta);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    letter-spacing: 0.2px;
+  }
+
+  .btn-primary:hover { background: var(--terracotta-dark); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .form-note {
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-align: center;
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .success-icon {
+    width: 48px; height: 48px;
+    background: var(--sage-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 22px;
+  }
+
+  .success-msg h3 {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .success-msg p { font-size: 14px; color: var(--ink-muted); }
+
+  /* ── SOCIAL PROOF STRIP ── */
+  .proof-strip {
+    padding: 20px 40px;
+    background: var(--sand);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  .proof-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+
+  .proof-item strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .proof-dot {
+    width: 4px; height: 4px;
+    background: var(--border-strong);
+    border-radius: 50%;
+  }
+
+  /* ── PROBLEM SECTION ── */
+  .section {
+    padding: 100px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 16px;
+  }
+
+  .section h2 {
+    font-family: 'Lora', serif;
+    font-size: clamp(30px, 3.5vw, 44px);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.8px;
+    color: var(--ink);
+    margin-bottom: 20px;
+    max-width: 640px;
+  }
+
+  .section-intro {
+    font-size: 18px;
+    color: var(--ink-muted);
+    max-width: 580px;
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 60px;
+  }
+
+  /* ── PROBLEM CARDS ── */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .problem-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .problem-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: 0 4px 20px rgba(28,26,22,0.06);
+  }
+
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--terracotta);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .problem-card:hover::before { opacity: 1; }
+
+  .problem-number {
+    font-family: 'Lora', serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--terracotta-light);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .problem-card h3 {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .problem-card p {
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    padding: 100px 24px;
+    background: var(--sand);
+  }
+
+  .how-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 60px;
+  }
+
+  .step-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(28,26,22,0.08);
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    background: var(--terracotta);
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+
+  .step-card h3 {
+    font-family: 'Lora', serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .step-card p {
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  .step-arrow {
+    display: none;
+  }
+
+  /* ── WHAT'S IN THE REPORT ── */
+  .report-section {
+    padding: 100px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-top: 60px;
+  }
+
+  .report-items { display: flex; flex-direction: column; gap: 16px; }
+
+  .report-item {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s;
+    align-items: flex-start;
+  }
+
+  .report-item:hover { border-color: var(--border-strong); }
+
+  .report-icon {
+    width: 40px; height: 40px;
+    background: var(--terracotta-light);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+  }
+
+  .report-item h4 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .report-item p {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+
+  /* ── MOCK REPORT ── */
+  .mock-report {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(28,26,22,0.09);
+    position: sticky;
+    top: 100px;
+  }
+
+  .mock-header {
+    background: var(--ink);
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mock-header-left { display: flex; flex-direction: column; gap: 4px; }
+
+  .mock-header .logo-sm {
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .mock-header .logo-sm span { color: var(--terracotta); }
+
+  .mock-address {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .mock-badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 100px;
+    background: rgba(196,97,58,0.25);
+    color: #F4A07A;
+  }
+
+  .mock-body { padding: 20px 24px; }
+
+  .mock-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 13px;
+  }
+
+  .mock-row:last-child { border-bottom: none; }
+
+  .mock-label { color: var(--ink-muted); }
+  .mock-value { font-weight: 500; color: var(--ink); }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  .tag-green { background: var(--sage-light); color: var(--sage); }
+  .tag-orange { background: #FEF3E2; color: #B45309; }
+  .tag-red { background: #FEE8E8; color: #B91C1C; }
+
+  .mock-verdict {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--sage-light);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .verdict-icon {
+    width: 32px; height: 32px;
+    background: var(--sage);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .mock-verdict h4 { font-size: 13px; font-weight: 500; color: var(--sage); margin-bottom: 3px; }
+  .mock-verdict p { font-size: 12px; color: #4A6741; line-height: 1.4; }
+
+  /* ── EXCLUSION NOTE ── */
+  .exclusion-note {
+    background: var(--sand);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 60px auto 0;
+    max-width: 820px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .excl-icon {
+    width: 28px; height: 28px;
+    background: var(--terracotta-light);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+
+  .exclusion-note p {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  /* ── TESTIMONIAL ── */
+  .testi-section {
+    padding: 100px 24px;
+    background: var(--ink);
+  }
+
+  .testi-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .testi-section .section-label { color: rgba(196,97,58,0.8); }
+
+  .testi-section h2 {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.25;
+    letter-spacing: -0.6px;
+    margin-bottom: 48px;
+  }
+
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    text-align: left;
+  }
+
+  .testi-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: background 0.2s;
+  }
+
+  .testi-card:hover { background: rgba(255,255,255,0.09); }
+
+  .testi-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 16px;
+  }
+
+  .star {
+    width: 14px; height: 14px;
+    background: var(--terracotta);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  .testi-text {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+
+  .testi-author { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .testi-author strong { color: rgba(255,255,255,0.7); font-weight: 500; }
+
+  /* ── FINAL CTA ── */
+  .cta-section {
+    padding: 120px 24px;
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .cta-section .section-label { text-align: center; }
+
+  .cta-section h2 {
+    font-family: 'Lora', serif;
+    font-size: clamp(32px, 4vw, 50px);
+    font-weight: 600;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  .cta-section p {
+    font-size: 17px;
+    color: var(--ink-muted);
+    font-weight: 300;
+    line-height: 1.65;
+    margin-bottom: 48px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px;
+    background: var(--sand);
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  footer .logo { font-size: 18px; }
+
+  footer p {
+    font-size: 13px;
+    color: var(--ink-faint);
+    max-width: 640px;
+    line-height: 1.5;
+  }
+
+  /* ── PRICE BADGE ── */
+  .price-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--sage);
+    background: var(--sage-light);
+    border: 1px solid rgba(74,103,65,0.2);
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+  .price-badge strong { font-weight: 600; }
+
+  /* ── SURVEY ── */
+  .survey-question { font-size: 13px !important; color: var(--ink-faint) !important; margin-bottom: 6px !important; font-style: italic; }
+  .survey-label { font-size: 15px !important; font-weight: 500 !important; color: var(--ink) !important; margin-bottom: 14px !important; }
+  .survey-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .survey-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    background: var(--sand);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font-size: 14px; color: var(--ink);
+  }
+  .survey-option:hover { border-color: var(--terracotta); background: var(--terracotta-light); }
+  .survey-option input[type="radio"] { accent-color: var(--terracotta); width: 16px; height: 16px; flex-shrink: 0; }
+  .btn-skip {
+    width: 100%; padding: 10px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px; color: var(--ink-faint);
+    background: transparent; border: none; cursor: pointer;
+    margin-top: 8px; transition: color 0.2s;
+  }
+  .btn-skip:hover { color: var(--ink-muted); }
+
+  /* ── CHECKBOX CONSENT ── */
+  .consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 14px 0;
+    cursor: pointer;
+  }
+  .consent-row input[type="checkbox"] {
+    width: 16px; height: 16px;
+    margin-top: 2px;
+    accent-color: var(--terracotta);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .consent-row span {
+    font-size: 12px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+  .consent-row a {
+    color: var(--terracotta);
+    text-decoration: underline;
+  }
+  .consent-error {
+    font-size: 12px;
+    color: #B91C1C;
+    margin-bottom: 10px;
+    display: none;
+  }
+
+  /* ── UTILS ── */
+  .text-center { text-align: center; }
+  .mt-2 { margin-top: 8px; }
+  .mt-4 { margin-top: 16px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    nav a.nav-cta { display: none; }
+
+    .hero { padding: 90px 20px 60px; }
+    .hero h1 { font-size: clamp(28px, 7vw, 40px); letter-spacing: -0.8px; }
+    .hero-sub { font-size: 16px; }
+
+    .waitlist-box { padding: 24px 20px; }
+    .form-row { flex-direction: column; }
+
+    .proof-strip {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 20px;
+    }
+    .proof-dot { display: none; }
+
+    .section { padding: 60px 20px; }
+    .section h2 { font-size: clamp(24px, 6vw, 34px); }
+    .section-intro { font-size: 16px; }
+    .problem-grid { grid-template-columns: 1fr; gap: 14px; }
+
+    .how-section { padding: 60px 20px; }
+    .steps-grid { grid-template-columns: 1fr; gap: 14px; }
+
+    .report-section { padding: 60px 20px; }
+    .report-grid { grid-template-columns: 1fr; }
+    .mock-report { display: none; }
+
+    .testi-section { padding: 60px 20px; }
+    .testi-grid { grid-template-columns: 1fr; }
+
+    .cta-section { padding: 60px 20px; }
+    .cta-section h2 { font-size: clamp(26px, 7vw, 38px); }
+
+    footer { flex-direction: column; gap: 16px; padding: 28px 20px; }
+
+    .survey-option { padding: 14px 16px; min-height: 50px; }
+    .consent-row span { font-size: 13px; }
+  }
+
+  @media (max-width: 390px) {
+    .hero h1 { font-size: 26px; }
+    .waitlist-box { padding: 20px 16px; }
+    .price-badge { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Report<span>Casa</span></a>
+  <a href="#waitlist" class="nav-cta">Voglio sapere per primo</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Nuovo servizio in arrivo</div>
+  <h1>Hai trovato casa e stai per firmare la proposta.<br><em>Ma sai davvero cosa stai per comprare?</em></h1>
+  <p class="hero-sub">ReportCasa analizza l'immobile che ti interessa — provenienza, ipoteche, valore di mercato — e ti consegna un report chiaro in 48 ore. Prima di firmare qualsiasi proposta.</p>
+
+  <div class="waitlist-box" id="waitlist">
+    <div class="price-badge">Il report completo a <strong>€149</strong></div>
+    <h2>Entra nella lista d'attesa</h2>
+    <p>Sii tra i primi a provare ReportCasa. Ti avvisiamo appena il servizio è disponibile.</p>
+    <div id="form-area">
+      <div id="step-1">
+        <div class="form-row">
+          <input type="text" id="nome" placeholder="Il tuo nome" autocomplete="given-name">
+        </div>
+        <div class="form-row">
+          <input type="email" id="email" placeholder="La tua email" autocomplete="email">
+        </div>
+        <label class="consent-row">
+          <input type="checkbox" id="consent1">
+          <span>Ho letto l'<a href="/privacy" target="_blank">informativa sulla privacy</a> e acconsento al trattamento dei miei dati per ricevere aggiornamenti su ReportCasa.</span>
+        </label>
+        <p class="consent-error" id="consent-error-1">Devi accettare l'informativa per continuare.</p>
+        <button class="btn-primary" onclick="handleStep1()">Continua →</button>
+        <p class="form-note">Nessuno spam. Solo un'email quando siamo pronti.</p>
+      </div>
+      <div id="step-2" style="display:none;">
+        <p class="survey-question">Una domanda veloce — ci aiuta a migliorare il servizio:</p>
+        <p class="survey-label">Quanto saresti disposto a pagare per questo report?</p>
+        <div class="survey-options" id="survey-opts">
+          <label class="survey-option"><input type="radio" name="prezzo" value="meno50"> <span>Meno di €50</span></label>
+          <label class="survey-option"><input type="radio" name="prezzo" value="50-100"> <span>€50 – €100</span></label>
+          <label class="survey-option"><input type="radio" name="prezzo" value="100-150"> <span>€100 – €150</span></label>
+          <label class="survey-option"><input type="radio" name="prezzo" value="piu150"> <span>Più di €150</span></label>
+        </div>
+        <button class="btn-primary" onclick="handleStep2()">Conferma iscrizione →</button>
+        <button class="btn-skip" onclick="handleStep2()">Salta questa domanda</button>
+      </div>
+    </div>
+    <div class="success-msg" id="success-msg">
+      <div class="success-icon">✓</div>
+      <h3>Perfetto, sei nella lista!</h3>
+      <p>Ti avvisiamo non appena ReportCasa è disponibile.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<div class="proof-strip">
+  <div class="proof-item"><strong>Dati ufficiali</strong> Agenzia delle Entrate</div>
+  <div class="proof-dot"></div>
+  <div class="proof-item"><strong>48 ore</strong> di consegna</div>
+  <div class="proof-dot"></div>
+  <div class="proof-item"><strong>100% digitale</strong> nessuna burocrazia</div>
+  <div class="proof-dot"></div>
+  <div class="proof-item"><strong>Disponibile</strong> su tutto il territorio nazionale*</div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section">
+  <p class="section-label">Il problema</p>
+  <h2>Comprare casa è la decisione più grande della tua vita. Ma spesso avviene al buio.</h2>
+  <p class="section-intro">L'agente lavora per chi vende. Il notaio entra in gioco solo alla fine. Chi ti tutela durante la trattativa?</p>
+
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="problem-number">01</div>
+      <h3>Non sai da dove viene l'immobile</h3>
+      <p>Donazione recente, successione contestata, proprietà con più eredi — problemi che emergono dopo il rogito, quando è troppo tardi.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-number">02</div>
+      <h3>Non sai se ci sono vincoli nascosti</h3>
+      <p>Ipoteche, pignoramenti, trascrizioni pregiudizievoli. Esistono registri pubblici che lo dicono — ma quasi nessuno li consulta prima di fare un'offerta.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-number">03</div>
+      <h3>Non sai se il prezzo è giusto</h3>
+      <p>L'Agenzia delle Entrate pubblica i valori reali di mercato per ogni zona d'Italia. Ma sono difficili da trovare e ancora più difficili da interpretare.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <p class="section-label">Come funziona</p>
+    <h2 class="section" style="padding:0; margin:0 0 16px;">Semplice come mandare un messaggio a un amico esperto</h2>
+    <p class="section-intro" style="margin-bottom:0;">Niente moduli complicati, niente attese infinite, niente linguaggio burocratico.</p>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Ci dici quale casa ti interessa</h3>
+        <p>Indirizzo, piano e i dati catastali (li chiedi in due minuti all'agente immobiliare — ti spieghiamo come).</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Noi facciamo la ricerca</h3>
+        <p>Accediamo ai registri ufficiali dell'Agenzia delle Entrate — visure catastali, ispezione ipotecaria, quotazioni di mercato.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Ricevi il tuo report in 48 ore</h3>
+        <p>Un documento chiaro, senza tecnicismi. Con un verdetto finale: verde, giallo o rosso — e cosa fare in ogni caso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S IN THE REPORT -->
+<section class="report-section">
+  <p class="section-label">Il report</p>
+  <h2>Tutto quello che devi sapere, spiegato come lo spiegherebbe un amico notaio</h2>
+  <p class="section-intro">Niente schermate di banche dati, niente tabelle incomprensibili. Solo informazioni che puoi usare.</p>
+
+  <div class="report-grid">
+    <div class="report-items">
+      <div class="report-item">
+        <div class="report-icon">🏠</div>
+        <div>
+          <h4>Identità dell'immobile</h4>
+          <p>Chi è il proprietario oggi, da quanto tempo, categoria catastale, superficie reale e rendita ufficiale.</p>
+        </div>
+      </div>
+      <div class="report-item">
+        <div class="report-icon">📜</div>
+        <div>
+          <h4>Storia della proprietà</h4>
+          <p>Come è arrivato nelle mani del venditore — compravendita, donazione, successione. Ogni passaggio conta.</p>
+        </div>
+      </div>
+      <div class="report-item">
+        <div class="report-icon">🔍</div>
+        <div>
+          <h4>Situazione ipotecaria</h4>
+          <p>Ipoteche attive, pignoramenti, trascrizioni pregiudizievoli. In verde se è tutto a posto, in rosso se c'è qualcosa da sapere.</p>
+        </div>
+      </div>
+      <div class="report-item">
+        <div class="report-icon">💶</div>
+        <div>
+          <h4>Valutazione del prezzo</h4>
+          <p>I valori ufficiali OMI per la zona, confrontati con il prezzo richiesto. Sai se stai pagando il giusto.</p>
+        </div>
+      </div>
+      <div class="report-item">
+        <div class="report-icon">⚠️</div>
+        <div>
+          <h4>Red flag e raccomandazioni</h4>
+          <p>Lista prioritizzata dei punti critici con indicazione precisa di cosa fare — e cosa chiedere prima di firmare.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOCK REPORT -->
+    <div class="mock-report">
+      <div class="mock-header">
+        <div class="mock-header-left">
+          <span class="logo-sm">Report<span>Casa</span></span>
+          <span class="mock-address">Via Lampugnano 175, Milano</span>
+        </div>
+        <span class="mock-badge">Report #001</span>
+      </div>
+      <div class="mock-body">
+        <div class="mock-row">
+          <span class="mock-label">Proprietario</span>
+          <span class="mock-value">Roberta C.</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Provenienza</span>
+          <span class="mock-value">Successione 2019</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Ipoteche</span>
+          <span class="tag tag-green">✓ Nessuna</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Prezzo richiesto</span>
+          <span class="mock-value">€490.000</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Valore OMI zona</span>
+          <span class="mock-value">€2.600 – €3.500/mq</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Prezzo pagato/mq</span>
+          <span class="tag tag-green">€2.008 — conveniente</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Impianti certificati</span>
+          <span class="tag tag-orange">⚠ Da verificare</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Rischio successione</span>
+          <span class="tag tag-orange">⚠ Scade 2029</span>
+        </div>
+        <div class="mock-verdict">
+          <div class="verdict-icon">✓</div>
+          <div>
+            <h4>Procedi con cautela</h4>
+            <p>Prezzo conveniente, situazione ipotecaria pulita. Tre verifiche prima del rogito.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXCLUSION NOTE -->
+  <div class="exclusion-note">
+    <div class="excl-icon">ℹ</div>
+    <p><strong>Copertura geografica:</strong> La ricerca viene eseguita a livello nazionale con esclusione delle province autonome di Trento e Bolzano, i cui archivi catastali ed ipotecari non sono gestiti dall'Agenzia delle Entrate. Per quanto riguarda le ricerche ipotecarie l'esclusione è estesa anche alle province di Trieste e Gorizia e alle altre zone nelle quali vige il sistema del libro fondiario.</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="testi-inner">
+    <p class="section-label text-center">Perché ne hai bisogno</p>
+    <h2>Le cose che non ti dice nessuno quando compri casa</h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+        <p class="testi-text">"Ho scoperto solo dal notaio, il giorno del rogito, che l'immobile proveniva da una donazione del 2019. Avevo già versato la caparra."</p>
+        <p class="testi-author"><strong>Marco T.</strong> — Acquirente a Milano</p>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+        <p class="testi-text">"Dopo quattro sopralluoghi, l'agente mi ha detto che era già un preliminare trascritto. Un servizio come ReportCasa me lo avrebbe detto subito."</p>
+        <p class="testi-author"><strong>Laura M.</strong> — Acquirente a Roma</p>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+        <p class="testi-text">"Stavo per pagare €30.000 in più del valore reale. I dati OMI erano pubblici, ma non sapevo dove cercarli né come leggerli."</p>
+        <p class="testi-author"><strong>Giulia R.</strong> — Acquirente a Firenze</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <p class="section-label text-center">Pronto?</p>
+  <h2>Compra casa con gli occhi aperti.</h2>
+  <p>Unisciti alla lista d'attesa. Ti avvisiamo non appena ReportCasa è disponibile — e i primi iscritti avranno un'offerta speciale di lancio.</p>
+
+  <div class="waitlist-box" style="max-width:100%;">
+    <h2>Entra nella lista d'attesa</h2>
+    <p>Nessun impegno. Solo un'email quando siamo pronti.</p>
+    <div id="form-area-2">
+      <div class="form-row">
+        <input type="text" id="nome2" placeholder="Il tuo nome" autocomplete="given-name">
+      </div>
+      <div class="form-row">
+        <input type="email" id="email2" placeholder="La tua email" autocomplete="email">
+      </div>
+      <label class="consent-row">
+        <input type="checkbox" id="consent2">
+        <span>Ho letto l'<a href="/privacy" target="_blank">informativa sulla privacy</a> e acconsento al trattamento dei miei dati per ricevere aggiornamenti su ReportCasa.</span>
+      </label>
+      <p class="consent-error" id="consent-error-2">Devi accettare l'informativa per continuare.</p>
+      <button class="btn-primary" onclick="handleSubmit2()">Voglio essere avvisato →</button>
+      <p class="form-note">Nessuno spam. Solo un'email quando siamo pronti.</p>
+    </div>
+    <div class="success-msg" id="success-msg-2">
+      <div class="success-icon">✓</div>
+      <h3>Sei nella lista!</h3>
+      <p>Ti avvisiamo non appena ReportCasa è disponibile.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">Report<span>Casa</span></a>
+  <p>ReportCasa non è un sostituto della consulenza notarile o legale. I dati provengono dai registri ufficiali dell'Agenzia delle Entrate. Le quotazioni OMI sono indicative e non sostituiscono una perizia professionale.</p>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// BREVO INTEGRATION
+// 1. Crea account su brevo.com (gratuito)
+// 2. Vai in Settings → API Keys → crea una chiave
+// 3. Sostituisci YOUR_BREVO_API_KEY qui sotto
+// 4. Crea una lista "ReportCasa Waitlist" e copia l'ID (lo trovi in Contacts → Lists)
+// 5. Sostituisci YOUR_LIST_ID qui sotto
+// ─────────────────────────────────────────────
+const BREVO_API_KEY = 'YOUR_BREVO_API_KEY';
+const BREVO_LIST_ID = YOUR_LIST_ID; // numero intero, es: 3
+
+async function sendToBrevo(nome, email, prezzo) {
+  if (BREVO_API_KEY === 'YOUR_BREVO_API_KEY') {
+    console.log('[ReportCasa] Brevo non configurato. Dati ricevuti:', { nome, email, prezzo });
+    return true;
+  }
+  try {
+    const res = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': BREVO_API_KEY
+      },
+      body: JSON.stringify({
+        email,
+        attributes: { FIRSTNAME: nome, PREZZO_SURVEY: prezzo },
+        listIds: [BREVO_LIST_ID],
+        updateEnabled: true
+      })
+    });
+    return res.ok || res.status === 204;
+  } catch(e) {
+    console.error('Brevo error:', e);
+    return false;
+  }
+}
+
+function validateEmail(email) { return email && email.includes('@') && email.includes('.'); }
+
+function highlightError(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.borderColor = '#C4613A';
+  el.focus();
+  setTimeout(() => el.style.borderColor = 'transparent', 2500);
+}
+
+function handleStep1() {
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const consent = document.getElementById('consent1').checked;
+  if (!nome) { highlightError('nome'); return; }
+  if (!validateEmail(email)) { highlightError('email'); return; }
+  if (!consent) {
+    document.getElementById('consent-error-1').style.display = 'block';
+    setTimeout(() => document.getElementById('consent-error-1').style.display = 'none', 3000);
+    return;
+  }
+  document.getElementById('step-1').style.display = 'none';
+  document.getElementById('step-2').style.display = 'block';
+}
+
+async function handleStep2() {
+  const selected = document.querySelector('input[name="prezzo"]:checked');
+  const prezzo = selected ? selected.value : 'non-risposto';
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim();
+  await sendToBrevo(nome, email, prezzo);
+  document.getElementById('form-area').style.display = 'none';
+  document.getElementById('success-msg').style.display = 'block';
+}
+
+async function handleSubmit2() {
+  const nome = document.getElementById('nome2').value.trim();
+  const email = document.getElementById('email2').value.trim();
+  const consent = document.getElementById('consent2').checked;
+  if (!nome) { highlightError('nome2'); return; }
+  if (!validateEmail(email)) { highlightError('email2'); return; }
+  if (!consent) {
+    document.getElementById('consent-error-2').style.display = 'block';
+    setTimeout(() => document.getElementById('consent-error-2').style.display = 'none', 3000);
+    return;
+  }
+  await sendToBrevo(nome, email, 'non-risposto');
+  document.getElementById('form-area-2').style.display = 'none';
+  document.getElementById('success-msg-2').style.display = 'block';
+}
+
+document.addEventListener('click', e => {
+  const opt = e.target.closest('.survey-option');
+  if (opt) {
+    document.querySelectorAll('.survey-option').forEach(o => {
+      o.style.borderColor = 'transparent';
+      o.style.background = 'var(--sand)';
+    });
+    opt.style.borderColor = 'var(--terracotta)';
+    opt.style.background = 'var(--terracotta-light)';
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.problem-card, .step-card, .report-item, .testi-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.problem-card, .step-card, .report-item, .testi-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+});
+</script>
+</body>
+</html>
