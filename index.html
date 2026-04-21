@@ -231,6 +231,7 @@
 
   .btn-primary:hover { background: var(--terracotta-dark); transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.7; cursor: wait; transform: none; }
 
   .form-note {
     font-size: 12px;
@@ -238,6 +239,14 @@
     text-align: center;
     margin-top: 14px;
     line-height: 1.5;
+  }
+
+  .form-error {
+    font-size: 13px;
+    color: #B91C1C;
+    text-align: center;
+    margin-top: 12px;
+    display: none;
   }
 
   .success-msg {
@@ -266,6 +275,18 @@
   }
 
   .success-msg p { font-size: 14px; color: var(--ink-muted); }
+
+  /* ── HONEYPOT: invisibile agli utenti, visibile solo ai bot ── */
+  .hp-field {
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+  }
 
   /* ── SOCIAL PROOF STRIP ── */
   .proof-strip {
@@ -790,6 +811,7 @@
     margin-top: 8px; transition: color 0.2s;
   }
   .btn-skip:hover { color: var(--ink-muted); }
+  .btn-skip:disabled { opacity: 0.5; cursor: wait; }
 
   /* ── CHECKBOX CONSENT ── */
   .consent-row {
@@ -897,15 +919,18 @@
     <p>Sii tra i primi a provare ReportCasa. Ti avvisiamo appena il servizio è disponibile.</p>
     <div id="form-area">
       <div id="step-1">
+        <!-- Honeypot: invisibile agli utenti, visibile solo ai bot. NON rimuovere. -->
+        <input type="text" id="website1" name="website" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true">
+
         <div class="form-row">
-          <input type="text" id="nome" placeholder="Il tuo nome" autocomplete="given-name">
+          <input type="text" id="nome" placeholder="Il tuo nome" autocomplete="given-name" maxlength="100">
         </div>
         <div class="form-row">
-          <input type="email" id="email" placeholder="La tua email" autocomplete="email">
+          <input type="email" id="email" placeholder="La tua email" autocomplete="email" maxlength="254">
         </div>
         <label class="consent-row">
           <input type="checkbox" id="consent1">
-          <span>Ho letto l'<a href="/privacy" target="_blank">informativa sulla privacy</a> e acconsento al trattamento dei miei dati per ricevere aggiornamenti su ReportCasa.</span>
+          <span>Ho letto l'<a href="/privacy" target="_blank" rel="noopener">informativa sulla privacy</a> e acconsento al trattamento dei miei dati per ricevere aggiornamenti su ReportCasa.</span>
         </label>
         <p class="consent-error" id="consent-error-1">Devi accettare l'informativa per continuare.</p>
         <button class="btn-primary" onclick="handleStep1()">Continua →</button>
@@ -920,8 +945,9 @@
           <label class="survey-option"><input type="radio" name="prezzo" value="100-150"> <span>€100 – €150</span></label>
           <label class="survey-option"><input type="radio" name="prezzo" value="piu150"> <span>Più di €150</span></label>
         </div>
-        <button class="btn-primary" onclick="handleStep2()">Conferma iscrizione →</button>
-        <button class="btn-skip" onclick="handleStep2()">Salta questa domanda</button>
+        <button class="btn-primary" onclick="handleStep2(event)">Conferma iscrizione →</button>
+        <button class="btn-skip" onclick="handleStep2(event)">Salta questa domanda</button>
+        <p class="form-error" id="form-error-1">Si è verificato un errore. Riprova tra qualche istante.</p>
       </div>
     </div>
     <div class="success-msg" id="success-msg">
@@ -1135,19 +1161,23 @@
     <h2>Entra nella lista d'attesa</h2>
     <p>Nessun impegno. Solo un'email quando siamo pronti.</p>
     <div id="form-area-2">
+      <!-- Honeypot: invisibile agli utenti, visibile solo ai bot. NON rimuovere. -->
+      <input type="text" id="website2" name="website" tabindex="-1" autocomplete="off" class="hp-field" aria-hidden="true">
+
       <div class="form-row">
-        <input type="text" id="nome2" placeholder="Il tuo nome" autocomplete="given-name">
+        <input type="text" id="nome2" placeholder="Il tuo nome" autocomplete="given-name" maxlength="100">
       </div>
       <div class="form-row">
-        <input type="email" id="email2" placeholder="La tua email" autocomplete="email">
+        <input type="email" id="email2" placeholder="La tua email" autocomplete="email" maxlength="254">
       </div>
       <label class="consent-row">
         <input type="checkbox" id="consent2">
-        <span>Ho letto l'<a href="/privacy" target="_blank">informativa sulla privacy</a> e acconsento al trattamento dei miei dati per ricevere aggiornamenti su ReportCasa.</span>
+        <span>Ho letto l'<a href="/privacy" target="_blank" rel="noopener">informativa sulla privacy</a> e acconsento al trattamento dei miei dati per ricevere aggiornamenti su ReportCasa.</span>
       </label>
       <p class="consent-error" id="consent-error-2">Devi accettare l'informativa per continuare.</p>
-      <button class="btn-primary" onclick="handleSubmit2()">Voglio essere avvisato →</button>
+      <button class="btn-primary" onclick="handleSubmit2(event)">Voglio essere avvisato →</button>
       <p class="form-note">Nessuno spam. Solo un'email quando siamo pronti.</p>
+      <p class="form-error" id="form-error-2">Si è verificato un errore. Riprova tra qualche istante.</p>
     </div>
     <div class="success-msg" id="success-msg-2">
       <div class="success-icon">✓</div>
@@ -1165,51 +1195,72 @@
 
 <script>
 // ─────────────────────────────────────────────
-// BREVO INTEGRATION
-// 1. Crea account su brevo.com (gratuito)
-// 2. Vai in Settings → API Keys → crea una chiave
-// 3. Sostituisci YOUR_BREVO_API_KEY qui sotto
-// 4. Crea una lista "ReportCasa Waitlist" e copia l'ID (lo trovi in Contacts → Lists)
-// 5. Sostituisci YOUR_LIST_ID qui sotto
+// ReportCasa — Waitlist form integration
+// I dati vengono inviati a /api/subscribe (serverless function su Vercel).
+// Nessuna chiave API lato client. Nessun segreto esposto.
 // ─────────────────────────────────────────────
-const BREVO_API_KEY = 'YOUR_BREVO_API_KEY';
-const BREVO_LIST_ID = YOUR_LIST_ID; // numero intero, es: 3
 
-async function sendToBrevo(nome, email, prezzo) {
-  if (BREVO_API_KEY === 'YOUR_BREVO_API_KEY') {
-    console.log('[ReportCasa] Brevo non configurato. Dati ricevuti:', { nome, email, prezzo });
-    return true;
-  }
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+async function sendToBackend({ nome, email, prezzo, consenso, website }) {
   try {
-    const res = await fetch('https://api.brevo.com/v3/contacts', {
+    const res = await fetch('/api/subscribe', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': BREVO_API_KEY
-      },
-      body: JSON.stringify({
-        email,
-        attributes: { FIRSTNAME: nome, PREZZO_SURVEY: prezzo },
-        listIds: [BREVO_LIST_ID],
-        updateEnabled: true
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, email, prezzo, consenso, website })
     });
-    return res.ok || res.status === 204;
-  } catch(e) {
-    console.error('Brevo error:', e);
-    return false;
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  } catch (e) {
+    console.error('Network error:', e);
+    return { ok: false, status: 0, data: {} };
   }
 }
 
-function validateEmail(email) { return email && email.includes('@') && email.includes('.'); }
+function validateEmail(email) {
+  return typeof email === 'string' && email.length > 0 && email.length <= 254 && EMAIL_RE.test(email);
+}
 
 function highlightError(id) {
   const el = document.getElementById(id);
   if (!el) return;
   el.style.borderColor = '#C4613A';
   el.focus();
-  setTimeout(() => el.style.borderColor = 'transparent', 2500);
+  setTimeout(() => { el.style.borderColor = 'transparent'; }, 2500);
 }
+
+function showConsentError(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+function showFormError(id, message) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (message) el.textContent = message;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+function setFormLoading(containerId, loading) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const buttons = container.querySelectorAll('button');
+  buttons.forEach(btn => {
+    if (loading) {
+      if (!btn.dataset.originalText) btn.dataset.originalText = btn.textContent;
+      if (btn.classList.contains('btn-primary')) btn.textContent = 'Iscrizione in corso...';
+      btn.disabled = true;
+    } else {
+      btn.textContent = btn.dataset.originalText || btn.textContent;
+      btn.disabled = false;
+    }
+  });
+}
+
+// ── FORM 1 (hero, two-step) ──
 
 function handleStep1() {
   const nome = document.getElementById('nome').value.trim();
@@ -1217,41 +1268,58 @@ function handleStep1() {
   const consent = document.getElementById('consent1').checked;
   if (!nome) { highlightError('nome'); return; }
   if (!validateEmail(email)) { highlightError('email'); return; }
-  if (!consent) {
-    document.getElementById('consent-error-1').style.display = 'block';
-    setTimeout(() => document.getElementById('consent-error-1').style.display = 'none', 3000);
-    return;
-  }
+  if (!consent) { showConsentError('consent-error-1'); return; }
   document.getElementById('step-1').style.display = 'none';
   document.getElementById('step-2').style.display = 'block';
 }
 
-async function handleStep2() {
+async function handleStep2(evt) {
+  if (evt) evt.preventDefault();
   const selected = document.querySelector('input[name="prezzo"]:checked');
   const prezzo = selected ? selected.value : 'non-risposto';
   const nome = document.getElementById('nome').value.trim();
   const email = document.getElementById('email').value.trim();
-  await sendToBrevo(nome, email, prezzo);
-  document.getElementById('form-area').style.display = 'none';
-  document.getElementById('success-msg').style.display = 'block';
+  const consenso = document.getElementById('consent1').checked;
+  const website = document.getElementById('website1').value;
+
+  setFormLoading('step-2', true);
+  const result = await sendToBackend({ nome, email, prezzo, consenso, website });
+  setFormLoading('step-2', false);
+
+  if (result.ok) {
+    document.getElementById('form-area').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+  } else {
+    showFormError('form-error-1', result.data && result.data.error);
+  }
 }
 
-async function handleSubmit2() {
+// ── FORM 2 (CTA finale, single-step) ──
+
+async function handleSubmit2(evt) {
+  if (evt) evt.preventDefault();
   const nome = document.getElementById('nome2').value.trim();
   const email = document.getElementById('email2').value.trim();
-  const consent = document.getElementById('consent2').checked;
+  const consenso = document.getElementById('consent2').checked;
+  const website = document.getElementById('website2').value;
+
   if (!nome) { highlightError('nome2'); return; }
   if (!validateEmail(email)) { highlightError('email2'); return; }
-  if (!consent) {
-    document.getElementById('consent-error-2').style.display = 'block';
-    setTimeout(() => document.getElementById('consent-error-2').style.display = 'none', 3000);
-    return;
+  if (!consenso) { showConsentError('consent-error-2'); return; }
+
+  setFormLoading('form-area-2', true);
+  const result = await sendToBackend({ nome, email, prezzo: 'non-risposto', consenso, website });
+  setFormLoading('form-area-2', false);
+
+  if (result.ok) {
+    document.getElementById('form-area-2').style.display = 'none';
+    document.getElementById('success-msg-2').style.display = 'block';
+  } else {
+    showFormError('form-error-2', result.data && result.data.error);
   }
-  await sendToBrevo(nome, email, 'non-risposto');
-  document.getElementById('form-area-2').style.display = 'none';
-  document.getElementById('success-msg-2').style.display = 'block';
 }
 
+// ── Survey option highlight ──
 document.addEventListener('click', e => {
   const opt = e.target.closest('.survey-option');
   if (opt) {
@@ -1264,6 +1332,7 @@ document.addEventListener('click', e => {
   }
 });
 
+// ── Scroll-in animation ──
 document.addEventListener('DOMContentLoaded', () => {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -1273,24 +1342,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }, { threshold: 0.1 });
-  document.querySelectorAll('.problem-card, .step-card, .report-item, .testi-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    observer.observe(el);
-  });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-
   document.querySelectorAll('.problem-card, .step-card, .report-item, .testi-card').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
